@@ -4,31 +4,31 @@ from django.db import models
 class Contact(models.Model):
     """Модель контактов"""
     name = models.CharField(
-        max_length=255,
-        verbose_name='Название организации'
+        'Название организации',
+        max_length=255
     )
     inn = models.CharField(
-        max_length=12,
-        verbose_name='ИНН'
+        'ИНН организации',
+        max_length=12
     )
     ogrn = models.CharField(
-        max_length=13,
-        verbose_name='ОГРН'
+        'ОГРН организации',
+        max_length=13
     )
     legal_address = models.CharField(
-        max_length=255,
-        verbose_name='Юридический адрес'
+        'Юридический адрес',
+        max_length=255
     )
     actual_address = models.CharField(
-        max_length=255,
-        verbose_name='Фактический адрес'
+        'Фактический адрес',
+        max_length=255
     )
     email = models.EmailField(
-        verbose_name='Email'
+        'Адрес электронной почты'
     )
     phone = models.CharField(
-        max_length=20,
-        verbose_name='Телефон'
+        'Телефон',
+        max_length=20
     )
 
     class Meta:

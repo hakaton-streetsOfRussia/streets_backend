@@ -4,10 +4,10 @@ from django.db import models
 class AboutUs(models.Model):
     """Модель для информации о нас"""
     mission = models.TextField(
-        verbose_name='Миссия'
+        'Миссия'
     )
     history = models.TextField(
-        verbose_name='История'
+        'История'
     )
 
     class Meta:
@@ -18,11 +18,11 @@ class AboutUs(models.Model):
 class FederalTeam(models.Model):
     """Модель для федеральной команды"""
     name = models.CharField(
-        max_length=255,
-        verbose_name='Имя'
+        'Наименование',
+        max_length=255
     )
     description = models.TextField(
-        verbose_name='Описание'
+        'Описание'
     )
 
     class Meta:
@@ -33,15 +33,15 @@ class FederalTeam(models.Model):
 class RegionalTeam(models.Model):
     """Модель для региональной команды"""
     name = models.CharField(
-        max_length=255,
-        verbose_name='Имя'
+        'Наименование',
+        max_length=255
     )
     description = models.TextField(
-        verbose_name='Описание'
+        'Описание'
     )
     region = models.CharField(
-        max_length=255,
-        verbose_name='Регион'
+        'Регион',
+        max_length=255
     )
 
     class Meta:
@@ -59,9 +59,9 @@ class PartnerType(models.Model):
     ]
 
     type = models.CharField(
+        'Тип',
         max_length=255,
-        choices=TYPE_CHOICES,
-        verbose_name='Тип'
+        choices=TYPE_CHOICES
     )
 
     class Meta:
@@ -72,32 +72,32 @@ class PartnerType(models.Model):
 class Partner(models.Model):
     """Модель для партнеров"""
     name = models.CharField(
-        max_length=255, 
-        verbose_name='Имя'
+        'Наименование',
+        max_length=255
     )
     description = models.TextField(
-        verbose_name='Описание'
+        'Описание'
     )
     type = models.ForeignKey(
         PartnerType,
         on_delete=models.SET_NULL,
         null=True,
-        verbose_name='Тип'
+        verbose_name='Тип партнера'
     )
 
     class Meta:
-        verbose_name = 'Партнер'
-        verbose_name_plural = 'Партнеры'
+        verbose_name = 'Партнер проекта'
+        verbose_name_plural = 'Партнеры проекта'
 
 
 class Gallery(models.Model):
     """Модель для галереи"""
     name = models.CharField(
-        max_length=255,
-        verbose_name='Название'
+        'Название галереи',
+        max_length=255
     )
     description = models.TextField(
-        verbose_name='Описание'
+        'Описание'
     )
 
     class Meta:
@@ -109,12 +109,29 @@ class Media(models.Model):
     """Модель для медиа (видео или фото)"""
     gallery = models.ForeignKey(
         Gallery, 
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        verbose_name='Галерея'
     )
     file = models.FileField(
+        'Файл медиа',
         upload_to='media/'
     )
 
     class Meta:
         verbose_name = 'Медиа'
         verbose_name_plural = 'Медиа'
+
+
+class Region(models.Model):
+    """Модель для субъектов России"""
+    name = models.CharField(
+        'Название региона',
+        max_length=255
+    )
+
+    class Meta:
+        verbose_name = 'Регион'
+        verbose_name_plural = 'Регионы'
+
+    def __str__(self):
+        return self.name

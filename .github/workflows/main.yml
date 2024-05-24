@@ -1,0 +1,45 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - feature/workflows
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: d1g1tsdocker/streets_backend:latest
+
+  deploy:
+    needs: build_and_push
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: executing remote ssh commands to deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: 95.163.230.143
+        username: root
+        password: ${{ secrets.REMOTE_SSH_PASSWORD }}
+        script: |
+          cd /home/ubuntu/streets_backend/infra
+          docker stop $(docker ps -a -q)
+          docker rm $(docker ps -a -q)
+          docker-compose up -d
+          docker exec streets_backend python streets_backend/manage.py migrate

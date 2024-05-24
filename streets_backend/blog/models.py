@@ -1,30 +1,70 @@
 from django.db import models
-from django.contrib.auth.models import User
 
+from aboutus.models import Region
+from users.models import CustomUser
+
+
+POST_CHOICES = (
+    ('post', 'Пост'),
+    ('news', 'Новость')
+)
 
 class BlogPost(models.Model):
-    '''Модель для постов в блоге'''
+    '''Модель для постов в блоге.'''
     author = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
-        verbose_name='Автор'
+        verbose_name='Автор поста'
     )
     title = models.CharField(
-        max_length=200,
-        verbose_name='Заголовок'
+        'Заголовок',
+        max_length=200
     )
     content = models.TextField(
-        verbose_name='Содержание'
+        'Содержание'
     )
     created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Дата создания'
+        'Дата создания',
+        auto_now_add=True
     )
     updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name='Дата обновления'
+        'Дата обновления',
+        auto_now=True
     )
+    image = models.ImageField(
+        'Картинка',
+        upload_to='blogs/images/',
+        null=False
+    )
+    type = models.CharField(
+        'Тип поста',
+        choices=POST_CHOICES,
+        default='post',
+        max_length=4
+    )
+    # TODO: обязательно при простановке новости
+    relevance_date = models.DateField(
+        'Крайняя дата актуальности новости'
+    )
+    # TODO: валидация что связь с регионом только если тип новость
+    region = models.ManyToManyField(Region, through='PostRegion')
 
     class Meta:
         verbose_name = 'Пост блога'
         verbose_name_plural = 'Посты блога'
+
+    def __str__(self):
+        return '"{}", {}. От {}'.format(
+            self.title,
+            self.author,
+            self.created_at
+        )
+
+
+class PostRegion(models.Model):
+    '''Модель связи поста с регионом.'''
+    news = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{}, {}'.format(self.news, self.region)

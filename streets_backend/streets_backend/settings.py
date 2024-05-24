@@ -1,16 +1,23 @@
 import os
+
+from datetime import timedelta
 from dotenv import load_dotenv
 from pathlib import Path
 
-env_path = Path('../infra') / '.env'
-load_dotenv(dotenv_path=env_path)
+dotenv_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'infra', '.env')
+load_dotenv(dotenv_path)
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+BASE_URL = os.getenv('BASE_URL')
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = bool(os.getenv('DEBUG', default=False))
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+EMPTY_VALUE: str = '-пусто-'
+
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -20,11 +27,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'contacts.apps.ContactsConfig',
     'blog.apps.BlogConfig',
     'events.apps.EventsConfig',
     'streetculture.apps.StreetCultureConfig',
     'aboutus.apps.AboutusConfig',
+    'drf_yasg',
+    'djoser',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -59,8 +70,12 @@ WSGI_APPLICATION = 'streets_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -91,7 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-RU'
 
 TIME_ZONE = 'UTC'
 
@@ -102,3 +117,26 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+
+    'PAGE_SIZE': 5,
+
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+AUTH_USER_MODEL = 'users.CustomUser'

@@ -6,10 +6,11 @@ from aboutus.serializers import (AboutUsSerializer,
                                  PartnerTypeSerializer,
                                  PartnerSerializer,
                                  GallerySerializer,
-                                 MediaSerializer)
+                                 MediaSerializer,
+                                 RegionSerializer)
 from aboutus.models import (AboutUs, FederalTeam,
                             RegionalTeam, PartnerType, 
-                            Partner, Gallery, Media)
+                            Partner, Gallery, Media, Region)
 
 
 class AboutUsViewSet(viewsets.ModelViewSet):
@@ -52,3 +53,9 @@ class MediaViewSet(viewsets.ModelViewSet):
     """ViewSet для модели Media"""
     queryset = Media.objects.all()
     serializer_class = MediaSerializer
+
+
+class RegionViewSet(viewsets.ModelViewSet):
+    """ViewSet для модели Region"""
+    queryset = Region.objects.all()
+    serializer_class = RegionSerializer

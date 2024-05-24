@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-from streetculture.models import StreetCulture, StreetCultureType
+from streetculture.models import StreetCulture
 
 admin.site.register(StreetCulture)
-admin.site.register(StreetCultureType)

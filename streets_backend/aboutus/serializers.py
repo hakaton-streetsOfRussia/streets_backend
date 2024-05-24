@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from aboutus.models import (AboutUs, FederalTeam,
                             RegionalTeam, PartnerType, 
-                            Partner, Gallery, Media)
+                            Partner, Gallery, Media, Region)
 
 
 class AboutUsSerializer(serializers.ModelSerializer):
@@ -56,3 +56,10 @@ class MediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Media
         fields = ['gallery', 'file']
+
+
+class RegionSerializer(serializers.ModelSerializer):
+    """Сериализатор для модели Region"""
+    class Meta:
+        model = Region
+        fields = ['name']

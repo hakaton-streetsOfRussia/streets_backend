@@ -1,8 +1,8 @@
 from django.db import models
 
 
-class StreetCultureType(models.Model):
-    """Модель для типа уличной культуры"""
+class StreetCulture(models.Model):
+    """Модель для уличной культуры"""
     TYPE_CHOICES = [
         ('SKATEBOARD', 'Скейтбординг'),
         ('PARKOUR', 'Паркур'),
@@ -18,23 +18,6 @@ class StreetCultureType(models.Model):
     ]
 
     name = models.CharField(
-        max_length=50,
-        choices=TYPE_CHOICES,
-        default='SKATEBOARD',
-        verbose_name='Название'
-    )
-
-    class Meta:
-        verbose_name = 'Тип уличной культуры'
-        verbose_name_plural = 'Типы уличной культуры'
-
-    def __str__(self):
-        return self.name
-
-
-class StreetCulture(models.Model):
-    """Модель для уличной культуры"""
-    name = models.CharField(
         max_length=255,
         verbose_name='Название'
     )
@@ -48,13 +31,16 @@ class StreetCulture(models.Model):
     video = models.URLField(
         verbose_name='Видео'
     )
-
-    culture_type = models.ForeignKey(
-        StreetCultureType,
-        on_delete=models.CASCADE,
+    culture_type = models.CharField(
+        max_length=50,
+        choices=TYPE_CHOICES,
+        default='SKATEBOARD',
         verbose_name='Тип культуры'
     )
 
     class Meta:
         verbose_name = 'Уличная культура'
         verbose_name_plural = 'Уличные культуры'
+
+    def __str__(self):
+        return self.name
