@@ -136,3 +136,5 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
+STATIC_ROOT = BASE_DIR / 'static'
