@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: streets_backend_db
+    image: postgres:13-alpine
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  streets_backend:
+    container_name: streets_backend
+    depends_on:
+      - db
+    restart: always
+    image: d1g1tsdocker/streets_backend:latest
+    volumes:
+      - static:/app/static/
+    env_file:
+      - .env
+    command: sh -c "python manage.py collectstatic --noinput &&
+      python manage.py makemigrations &&
+      python manage.py migrate &&
+      gunicorn streets_russia.wsgi:application --bind 0:8000"
+
+  # streets_frontend:
+  #   container_name: streets_frontend
+  #   depends_on:
+  #     - streets_backend
+  #   image: d1g1tsdocker/streets_frontend:latest
+  #   volumes:
+  #     - static_frontend:/app/static_frontend
+
+  nginx:
+    container_name: streets_nginx
+    depends_on:
+      - streets_backend
+      # - streets_frontend
+    restart: always
+    image: d1g1tsdocker/streets_nginx:latest
+    volumes:
+      - static:/var/html/static/
+      - static_front:/usr/share/nginx/html
+    ports:
+      - "8000:80"
+      - "443:443"
+
+volumes:
+  db-data:
+  static:
+  static_front:
