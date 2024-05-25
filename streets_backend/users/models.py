@@ -23,12 +23,16 @@ handler.setFormatter(formatter)
 logger.disabled = False
 logger.debug('Logging from users.models has been started.')
 
-ROLE_CHOICES = (
-    ('admin', 'Администратор'),
-    ('fed manager', 'Федеральный руководитель'),
-    ('reg manager', 'Региональный руководитель'),
-    ('participant', 'Участник')
+ROLE_CHOICES_SLUGS = ('admin', 'fed manager', 'reg manager', 'participant')
+
+ROLE_CHOICES_HUMAN = (
+    'Администратор',
+    'Федеральный руководитель',
+    'Региональный руководитель',
+    'Участник'
 )
+
+ROLE_CHOICES = zip(ROLE_CHOICES_SLUGS, ROLE_CHOICES_HUMAN)
 
 
 class CustomUserManager(BaseUserManager):
@@ -40,6 +44,7 @@ class CustomUserManager(BaseUserManager):
             email,
             role,
             password,
+            superuser=True,
             **other_fields
         )
 
@@ -49,6 +54,7 @@ class CustomUserManager(BaseUserManager):
         email,
         role='participant',
         password=None,
+        superuser=False,
         **other_fields
     ):
         email = self.normalize_email(email)
@@ -58,7 +64,10 @@ class CustomUserManager(BaseUserManager):
             role=role,
             **other_fields
         )
-        user.is_staff = True
+        if superuser:
+            user.is_superuser=True
+        if role in ROLE_CHOICES_SLUGS[:3]:
+            user.is_staff = True
         user.set_password(password)
         user.save()
         if user.is_superuser is True:
