@@ -14,6 +14,7 @@ from contacts.views import ContactViewSet
 from events.views import EventViewSet, CoordinatesViewSet, EventLocationViewSet
 from myauth.views import MyAuth, MyUnAuth
 from streetculture.views import StreetCultureViewSet
+from users.views import ManagementViewSet
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -43,6 +44,7 @@ router.register('v1/region', RegionViewSet, basename='region')
 router.register('v1/event', EventViewSet, basename='event')
 router.register('v1/eventlocation', EventLocationViewSet, basename='eventlocation')
 router.register('v1/coordinates', CoordinatesViewSet, basename='coordinates')
+router.register('v1/management', ManagementViewSet, basename='management')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
