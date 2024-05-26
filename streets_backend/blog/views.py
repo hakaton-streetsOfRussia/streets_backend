@@ -18,6 +18,12 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     @action(detail=False, url_path='main-page')
     def main_page(self, request):
         '''Отображение для главной страницы.'''
+        # получить пользователя
+        # найти его регионы
+        # найти новости из этих регионов
+        request_user = request_user.user
+        print(request_user.regions)
+        exit()
         user_regions = get_list_or_404(UserRegion, user=request.user)
         print(user_regions)
         # region_ids = []
@@ -29,8 +35,8 @@ class BlogPostViewSet(viewsets.ModelViewSet):
         # print(BlogPost.objects.filter(type='reg news'))
         reg_news = BlogPost.objects.filter(type='reg news').filter(region__in=user_regions)[:2]
         print('reg:', reg_news)
-        fed_news = BlogPost.objects.filter(type='fed news')[:2]
-        main_news = reg_news | fed_news
+        # fed_news = BlogPost.objects.filter(type='fed news')[:2]
+        # main_news = reg_news | fed_news
         print('main: {}'.format(main_news))
         serializer = self.get_serializer(main_news)
         return Response(serializer.data)
