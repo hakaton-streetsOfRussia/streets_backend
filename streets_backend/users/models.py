@@ -39,7 +39,7 @@ class CustomUserManager(BaseUserManager):
     def create_superuser(self, username, email, password, **other_fields):
         role = 'admin'
 
-        return self.create_user(
+        user = self.create_user(
             username,
             email,
             role,
@@ -47,6 +47,10 @@ class CustomUserManager(BaseUserManager):
             superuser=True,
             **other_fields
         )
+        user.is_superuser = True
+        user.save()
+
+        return user
 
     def create_user(
         self,
