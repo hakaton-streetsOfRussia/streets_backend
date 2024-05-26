@@ -50,9 +50,14 @@ class BlogPost(models.Model):
         'Крайняя дата актуальности новости'
     )
     # TODO: валидация что связь с регионом только если тип новость
-    region = models.ManyToManyField(Region, through='PostRegion')
+    region = models.ManyToManyField(
+        Region,
+        through='PostRegion',
+        related_name='regions'
+    )
 
     class Meta:
+        ordering = ('-created_at',)
         verbose_name = 'Пост блога'
         verbose_name_plural = 'Посты блога'
 

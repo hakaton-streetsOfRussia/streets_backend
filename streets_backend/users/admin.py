@@ -46,8 +46,14 @@ class UserAdminConfig(UserAdmin):
         }),
         ('Персональные данные', {
             'fields': (
-                'first_name', 'last_name', 'third_name', 'bio', 'birth_date'
-            ), 'classes': ('collapse',)
+                'first_name',
+                'last_name',
+                'third_name',
+                'bio',
+                'summary bio',
+                'birth_date'
+            ),
+            'classes': ('collapse',)
         }),
         ('Контактная информация', {
             'fields': (

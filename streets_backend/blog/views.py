@@ -19,15 +19,19 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     def main_page(self, request):
         '''Отображение для главной страницы.'''
         user_regions = get_list_or_404(UserRegion, user=request.user)
-        region_ids = []
-        for user_region in user_regions:
-            region_ids.append(user_region.region.id)
-        print(region_ids)
-        print(BlogPost.objects.filter(type='reg news'))
-        reg_news = BlogPost.objects.filter(type='reg news').filter(region__in=region_ids)[:2]
+        print(user_regions)
+        # region_ids = []
+        # for user_region in user_regions:
+        #     region_ids.append(user_region.region.id)
+        # print(region_ids)
+        # for obj in BlogPost.objects.filter(type='reg news'):
+        #     print(obj.region.id)
+        # print(BlogPost.objects.filter(type='reg news'))
+        reg_news = BlogPost.objects.filter(type='reg news').filter(region__in=user_regions)[:2]
+        print('reg:', reg_news)
         fed_news = BlogPost.objects.filter(type='fed news')[:2]
         main_news = reg_news | fed_news
-        print(main_news)
+        print('main: {}'.format(main_news))
         serializer = self.get_serializer(main_news)
         return Response(serializer.data)
 

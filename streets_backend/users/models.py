@@ -83,6 +83,7 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     """Кастомная модель пользователя."""
     objects = CustomUserManager()
+    summary_bio = models.TextField('Краткая информация', blank=True, null=True)
     bio = models.TextField('Дополнительная информация', blank=True, null=True)
     role = models.CharField(
         'Роль',
