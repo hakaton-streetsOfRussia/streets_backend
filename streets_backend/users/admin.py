@@ -50,7 +50,7 @@ class UserAdminConfig(UserAdmin):
                 'last_name',
                 'third_name',
                 'bio',
-                'summary bio',
+                'summary_bio',
                 'birth_date'
             ),
             'classes': ('collapse',)
