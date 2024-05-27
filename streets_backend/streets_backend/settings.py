@@ -1,8 +1,6 @@
 import os
 
-from datetime import timedelta
 from dotenv import load_dotenv
-from pathlib import Path
 from pathlib import Path
 
 dotenv_path = os.path.join(
