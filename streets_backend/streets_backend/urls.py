@@ -14,7 +14,7 @@ from contacts.views import ContactViewSet
 from events.views import EventViewSet, CoordinatesViewSet, EventLocationViewSet
 from myauth.views import MyAuth, MyUnAuth
 from streetculture.views import StreetCultureViewSet
-from users.views import ManagementViewSet, SignUpView
+from users.views import ManagementViewSet, SignUpView, ConfView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -66,5 +66,10 @@ urlpatterns = [
     ),
     path('v1/login', MyAuth.as_view(), name='login'),
     path('v1/logout', MyUnAuth.as_view(), name='logout'),
-    path('v1/signup', SignUpView.as_view(), name='signup')
+    path('v1/signup', SignUpView.as_view(), name='signup'),
+    path(
+        'v1/confirmation/<slug:username>/<int:conf_code>',
+        ConfView.as_view(),
+        name='confirmation'
+    )
 ]

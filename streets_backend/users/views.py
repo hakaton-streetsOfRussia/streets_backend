@@ -65,4 +65,12 @@ class SignUpView(views.APIView):
                 fail_silently=False
             )
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ConfView(views.APIView):
+    """Подтверждение регистрации пользователя по почте."""
+    def get(self, request):
+        print(self.kwargs)
+        exit()
+
