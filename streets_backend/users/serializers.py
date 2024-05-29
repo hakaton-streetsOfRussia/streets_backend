@@ -27,3 +27,41 @@ class ManagementListSerializer(serializers.ModelSerializer):
             'summary_bio',
             'avatar'
         )
+
+
+class SignUpSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomUser
+        fields = (
+            'username',
+            'email',
+            'confirmation_code'
+        )
+
+    def validate_username(self, value):
+        user = None
+        try:
+            user = CustomUser.objects.get(username=value)
+        except CustomUser.DoesNotExist:
+            pass
+        if user is not None:
+            raise serializers.ValidationError(
+                'У нас уже есть пользователь с таким username.'
+            )
+        match = re.fullmatch(r'^[mM][eE]$', value)
+        if match:
+            raise serializers.ValidationError('Недопустимое имя пользователя.')
+        return value
+
+    def validate_email(self, value):
+        user = None
+        try:
+            user = CustomUser.objects.get(email=value)
+        except CustomUser.DoesNotExist:
+            pass
+        if user is not None:
+            raise serializers.ValidationError(
+                ('У нас уже есть пользователь с таким email.')
+            )
+        return value

@@ -1,5 +1,11 @@
-from rest_framework import permissions, viewsets
+from random import randint
 
+from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404, redirect
+from rest_framework import permissions, status, viewsets, views
+from rest_framework.response import Response
+
+from streets_backend.settings import BASE_URL, EMAIL_HOST_USER
 from users.models import CustomUser
 from users.serializers import (
     ManagementDetailSerializer,
@@ -50,9 +56,17 @@ class SignUpView(views.APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ConfView(views.APIView):
+class ConfirmationView(views.APIView):
     """Подтверждение регистрации пользователя по почте."""
-    def get(self, request):
-        print(self.kwargs)
-        exit()
-
+    def get(self, request, username, conf_code):
+        conf_code_int = int(conf_code)
+        user = get_object_or_404(CustomUser, username=username)
+        actual_conf_code = user.confirmation_code
+        print('act conf code', type(actual_conf_code))
+        if conf_code_int != actual_conf_code:
+            return Response(
+                'Ошибка при регистрации',
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        return redirect('login')

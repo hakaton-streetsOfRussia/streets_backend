@@ -34,7 +34,8 @@ class UserAdminConfig(UserAdmin):
         'first_name',
         'last_name',
         'role',
-        'is_active'
+        'is_active',
+        'confirmation_code'
     )
     search_fields = ('username', 'email')
 
