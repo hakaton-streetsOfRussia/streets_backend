@@ -37,7 +37,8 @@ class SignUpSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = (
             'username',
-            'email'
+            'email',
+            'confirmation_code'
         )
 
     def validate_username(self, value):
