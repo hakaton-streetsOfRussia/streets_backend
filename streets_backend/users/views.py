@@ -62,11 +62,9 @@ class ConfirmationView(views.APIView):
         conf_code_int = int(conf_code)
         user = get_object_or_404(CustomUser, username=username)
         actual_conf_code = user.confirmation_code
-        print('act conf code', type(actual_conf_code))
         if conf_code_int != actual_conf_code:
             return Response(
                 'Ошибка при регистрации',
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
         return redirect('login')
