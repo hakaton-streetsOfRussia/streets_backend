@@ -32,6 +32,7 @@ class ManagementListSerializer(serializers.ModelSerializer):
 
 
 class SignUpSerializer(serializers.ModelSerializer):
+    confirmation_code = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = CustomUser
@@ -67,3 +68,13 @@ class SignUpSerializer(serializers.ModelSerializer):
                 ('У нас уже есть пользователь с таким email.')
             )
         return value
+    
+
+class PasswordSettingSerializer(serializers.Serializer):
+    password1 = serializers.CharField(min_length=8, max_length=10, write_only=True)
+    password2 = serializers.CharField(min_length=8, max_length=10, write_only=True)
+
+    def validate(self, data):
+        if data['password1'] != data['password2']:
+            raise serializers.ValidationError('Пароли должны совпадать!')
+        return data
