@@ -10,4 +10,10 @@ admin.site.register(PartnerType)
 admin.site.register(Partner)
 admin.site.register(Gallery)
 admin.site.register(Media)
-admin.site.register(Region)
+
+@admin.register(Region)
+class RegionConfig(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'name'
+    )

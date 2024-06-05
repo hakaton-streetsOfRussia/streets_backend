@@ -9,7 +9,9 @@ from streets_backend.settings import BASE_URL, EMAIL_HOST_USER
 from users.models import CustomUser
 from users.serializers import (
     ManagementDetailSerializer,
-    ManagementListSerializer
+    ManagementListSerializer,
+    PasswordSettingSerializer,
+    SignUpSerializer
 )
 
 
@@ -52,19 +54,42 @@ class SignUpView(views.APIView):
                 mail_to,
                 fail_silently=False
             )
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ConfirmationView(views.APIView):
     """Подтверждение регистрации пользователя по почте."""
-    def get(self, request, username, conf_code):
-        conf_code_int = int(conf_code)
+    def get(self, _, username, confirmation_code):
+        confirmation_code_int = int(confirmation_code)
         user = get_object_or_404(CustomUser, username=username)
         actual_conf_code = user.confirmation_code
-        if conf_code_int != actual_conf_code:
+        if confirmation_code_int != actual_conf_code:
             return Response(
                 'Ошибка при регистрации',
                 status=status.HTTP_400_BAD_REQUEST
             )
-        return redirect('login')
+        return Response('Пользователь подтвержден', status=status.HTTP_200_OK)
+
+
+class PasswordSettingView(views.APIView):
+    """Регистрация пароля пользователя."""
+    def post(self, request, username, confirmation_code):
+        confirmation_code_int = int(confirmation_code)
+        user = get_object_or_404(CustomUser, username=username)
+        actual_conf_code = user.confirmation_code
+        if confirmation_code_int != actual_conf_code:
+            return Response(
+                'Ошибка при регистрации',
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        rd = request.data
+        password1 = rd.get('password1')
+        rd['username'] = username
+        serializer = PasswordSettingSerializer(data=rd)
+        if serializer.is_valid():
+            user.set_password(password1)
+            user.is_active = True
+            user.save()
+            return Response({'username': username}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

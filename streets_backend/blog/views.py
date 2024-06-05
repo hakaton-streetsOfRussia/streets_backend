@@ -17,18 +17,26 @@ class BlogPostViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, url_path='main-page')
     def main_page(self, request):
-        '''Отображение для главной страницы.'''
-        user_regions = get_list_or_404(UserRegion, user=request.user)
-        region_ids = []
-        for user_region in user_regions:
-            region_ids.append(user_region.region.id)
+        """Отображение для главной страницы."""
+        DEFAULT_CLIENT_IP = '46.39.54.95'
+        # теперь регионы должны определяться по ip
+        client_ip = request.META.get('HTTP_CLIENT_IP') or DEFAULT_CLIENT_IP
+        # region_ids = get_regions_from_ip(client_ip) or (11,)
+        region_ids = (
+            UserRegion.objects.filter(user=request.user).
+            values_list('region__id').distinct()
+        )
         print(region_ids)
-        print(BlogPost.objects.filter(type='reg news'))
+        # region_ids = user_regions
+        # region_ids = []
+        # for user_region in user_regions:
+        #     region_ids.append(user_region.region.id)
+        # print(region_ids)
+        # print(BlogPost.objects.filter(type='reg news'))
         reg_news = BlogPost.objects.filter(type='reg news').filter(region__in=region_ids)[:2]
         fed_news = BlogPost.objects.filter(type='fed news')[:2]
         main_news = reg_news | fed_news
-        print(main_news)
-        serializer = self.get_serializer(main_news)
+        serializer = BlogPostSerializer(main_news, many=True)
         return Response(serializer.data)
     
     def perform_create(self, serializer):
