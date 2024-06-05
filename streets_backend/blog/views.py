@@ -21,11 +21,13 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     def main_page(self, request):
         """Отображение для главной страницы."""
         # Москва
-        # DEFAULT_CLIENT_IP = '46.39.54.95'
+        DEFAULT_CLIENT_IP = '46.39.54.95'
         # Адыгея
         # DEFAULT_CLIENT_IP = '95.46.172.56'
         # Алтайский край
-        DEFAULT_CLIENT_IP = '2.60.244.70'
+        # DEFAULT_CLIENT_IP = '2.60.244.70'
+        # Франция
+        # DEFAULT_CLIENT_IP = '213.251.185.168'
         # теперь регионы должны определяться по ip
         client_ip = request.META.get('HTTP_CLIENT_IP') or DEFAULT_CLIENT_IP
         region_id = get_region_from_ip(client_ip) or 11

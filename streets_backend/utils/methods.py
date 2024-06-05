@@ -13,7 +13,7 @@ def get_confirmation_code():
     return randint(100000000, 999999999)
 
 
-def get_region_from_ip(ip: str) -> list[Region]:
+def get_region_from_ip(ip: str) -> Optional[int]:
     """Получение релевантных регионов из ip."""
     region_name = get_location(ip)
     print(region_name)
@@ -26,7 +26,7 @@ def get_region_from_ip(ip: str) -> list[Region]:
 def get_location(ip: str) -> Optional[str]:
     """Получение информации о геопозиции."""
     response = requests.get(f"http://ip-api.com/json/{ip}?lang=ru")
-    if response.status_code == 404:
+    if not response.ok:
         return None
     result = response.json()
     if result["status"] == "fail":
