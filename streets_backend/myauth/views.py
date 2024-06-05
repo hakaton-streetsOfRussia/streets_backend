@@ -30,7 +30,7 @@ class MyAuth(ObtainAuthToken):
             context={'request': request})
         if serializer.is_valid():
             user = serializer.validated_data['user']
-            token, created = Token.objects.get_or_create(user=user)
+            token, _ = Token.objects.get_or_create(user=user)
             return Response(
                 {'auth_token': token.key},
                 status=status.HTTP_201_CREATED

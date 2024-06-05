@@ -41,5 +41,4 @@ jobs:
           cd /home/ubuntu/streets_backend/
           docker stop $(docker ps -a -q)
           docker rm $(docker ps -a -q)
-          docker system prune -a -f
           docker-compose -f docker-compose.production.yml up -d

@@ -45,10 +45,6 @@ class BlogPost(models.Model):
         default='post',
         max_length=16
     )
-    # TODO: обязательно при простановке новости
-    relevance_date = models.DateField(
-        'Крайняя дата актуальности новости'
-    )
     # TODO: валидация что связь с регионом только если тип новость
     region = models.ManyToManyField(Region, through='PostRegion')
 

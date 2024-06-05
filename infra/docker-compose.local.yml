@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: streets_backend_db
+    image: postgres:13-alpine
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+
+  streets_backend:
+    container_name: streets_backend
+    depends_on:
+      - db
+    build: ../streets_backend
+    volumes:
+      - ../streets_backend:/app
+    env_file:
+      - ./.env
+    command: sh -c "python manage.py makemigrations &&
+      python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+
+volumes:
+  db-data:

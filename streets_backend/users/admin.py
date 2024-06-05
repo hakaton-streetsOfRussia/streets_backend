@@ -34,7 +34,8 @@ class UserAdminConfig(UserAdmin):
         'first_name',
         'last_name',
         'role',
-        'is_active'
+        'is_active',
+        'confirmation_code'
     )
     search_fields = ('username', 'email')
 
@@ -46,8 +47,14 @@ class UserAdminConfig(UserAdmin):
         }),
         ('Персональные данные', {
             'fields': (
-                'first_name', 'last_name', 'third_name', 'bio', 'birth_date'
-            ), 'classes': ('collapse',)
+                'first_name',
+                'last_name',
+                'third_name',
+                'bio',
+                'summary_bio',
+                'birth_date'
+            ),
+            'classes': ('collapse',)
         }),
         ('Контактная информация', {
             'fields': (

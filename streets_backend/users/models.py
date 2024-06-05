@@ -2,6 +2,8 @@ import logging
 import sys
 
 import jwt
+
+from random import randint
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.db import models
@@ -87,6 +89,7 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     """Кастомная модель пользователя."""
     objects = CustomUserManager()
+    summary_bio = models.TextField('Краткая информация', blank=True, null=True)
     bio = models.TextField('Дополнительная информация', blank=True, null=True)
     role = models.CharField(
         'Роль',
@@ -174,6 +177,7 @@ class CustomUser(AbstractUser):
         blank=True
     )
     regions = models.ManyToManyField(Region, through='UserRegion')
+    confirmation_code = models.IntegerField(null=True)
 
     class Meta:
         ordering = ('-date_joined',)
