@@ -1,3 +1,17 @@
+<<<<<<< HEAD
+=======
+import jwt
+import os
+import smtplib
+
+from random import randint
+
+from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404, redirect
+from rest_framework import permissions, status, viewsets, views
+from rest_framework.response import Response
+
+>>>>>>> ext_features/registration
 from random import randint
 
 from django.core.mail import send_mail
